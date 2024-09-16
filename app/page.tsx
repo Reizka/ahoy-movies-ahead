@@ -1,4 +1,10 @@
-import { sql } from "@vercel/postgres";
+
+export default function Page() {
+  return <h1>Landing page</h1>
+}
+
+
+/*import { sql } from "@vercel/postgres";
 
 export default async function Cart({
   params
@@ -13,7 +19,6 @@ export default async function Cart({
   return (
     <div>
       <h2>Users</h2>
-      {/* Mapping over each user and displaying their name */}
       {rows.map((row) => (
         <div key={row.user_id}>
           {row.name}
@@ -22,3 +27,4 @@ export default async function Cart({
     </div>
   );
 }
+*/

@@ -4,6 +4,9 @@
 import { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../utility/firebase'; // Import the Firebase auth instance
+//import Postgres user CRUD
+import { addNewUser } from '../utility/db/user';
+
 
 
 const SignupForm: React.FC = () => {
@@ -16,7 +19,7 @@ const SignupForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Reset messages
     setErrorMessage(null);
     setSuccessMessage(null);
@@ -27,18 +30,27 @@ const SignupForm: React.FC = () => {
     }
 
     try {
-      // Create user with email and password
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Update the user's display name (username)
-      await updateProfile(userCredential.user, {
-        displayName: username,
-      });
 
-      setSuccessMessage('Signup successful! User created.');
+      //db request - check if db works before creating account on FB
+      console.log(username + " " + email);
+      const success = await addNewUser(username, email);
+      if (success) {
+        // Create user with email and password
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        // Update the user's display name (username)
+        await updateProfile(userCredential.user, {
+          displayName: username,
+        });
+
+        setSuccessMessage('Signup successful! User created.');
+
+      }
     } catch (error: any) {
       setErrorMessage(error.message);
     }
+
+
   };
 
   return (
@@ -55,7 +67,7 @@ const SignupForm: React.FC = () => {
             required
           />
         </div>
-        
+
         <div>
           <label htmlFor="email">Email:</label>
           <input
@@ -66,7 +78,7 @@ const SignupForm: React.FC = () => {
             required
           />
         </div>
-        
+
         <div>
           <label htmlFor="password">Password:</label>
           <input
@@ -77,7 +89,7 @@ const SignupForm: React.FC = () => {
             required
           />
         </div>
-        
+
         <div>
           <label htmlFor="confirmPassword">Confirm Password:</label>
           <input

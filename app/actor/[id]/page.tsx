@@ -41,6 +41,10 @@ const fetchActorDetails = async (actorId) => {
     }
 };
 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { CalendarDays, Film, Star, TrendingUp } from "lucide-react"
+
 const fetchMovieCredits = async (actorId) => {
     const url = `https://api.themoviedb.org/3/person/${actorId}/movie_credits`;
     const options = {
@@ -76,6 +80,7 @@ const ActorPage = ({ params }) => {
             const fetchData = async () => {
                 setLoading(true);
                 const actorDetails = await fetchActorDetails(id);
+                console.log('det', actorDetails);
                 const credits = await fetchMovieCredits(id);
                 setActor(actorDetails);
                 setMovieCredits(credits);
@@ -94,29 +99,61 @@ const ActorPage = ({ params }) => {
     }
 
     return (
-        <div className="p-4">
-            <div className="flex items-center space-x-4">
-                <Avatar>
-                    <AvatarImage src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`} alt={actor.name} />
-                    <AvatarFallback>{actor.name[0]}</AvatarFallback>
+        <Card className="w-full max-w-3xl mx-auto">
+            <CardHeader className="flex flex-col sm:flex-row items-center gap-4">
+                <Avatar className="w-32 h-32 sm:w-40 sm:h-40 mr-auto">
+                    <AvatarImage
+                        src={`https://image.tmdb.org/t/p/w300${actor.profile_path}`}
+                        alt={actor.name} />
+                    <AvatarFallback>{actor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
-                <div>
-                    <h1 className="text-2xl font-bold">{actor.name}</h1>
-                    <p>{actor.biography}</p>
+                <div className="text-center sm:text-left">
+                    <CardTitle className="text-2xl sm:text-3xl mb-2">{actor.name}</CardTitle>
+                    <CardDescription className="flex flex-wrap justify-center sm:justify-start gap-2">
+                        <Badge variant="secondary" className="flex items-center gap-1">
+                            <CalendarDays className="w-3 h-3" />
+                            {actor.birthday}
+                        </Badge>
+                        <Badge variant="secondary" className="flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3" />
+                            {actor.popularity.toFixed(1)}
+                        </Badge>
+                    </CardDescription>
                 </div>
-            </div>
-            <h2 className="text-xl font-bold mt-4">Movie Credits</h2>
-            <Accordion type="single" collapsible className="w-full">
-                {movieCredits.map((movie) => (
-                    <AccordionItem key={movie.id} value={movie.id.toString()}>
-                        <AccordionTrigger>{movie.title}</AccordionTrigger>
-                        <AccordionContent>
-                            <p>{movie.overview}</p>
-                        </AccordionContent>
-                    </AccordionItem>
-                ))}
-            </Accordion>
-        </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div>
+                    <h3 className="font-semibold mb-2">Biography</h3>
+                    <p className="text-sm text-muted-foreground">{actor.biography}</p>
+                </div>
+                <div>
+                    <h3 className="font-semibold mb-2">Place of Birth</h3>
+                    <p className="text-sm text-muted-foreground">{actor.placeOfBirth}</p>
+                </div>
+                <div>
+                    <h3 className="font-semibold mb-2">Known For</h3>
+                    <div className="flex flex-wrap gap-2">
+                        {movieCredits.slice(0, 5).map((movie, index) => (
+                            <Badge key={index} variant="outline" className="flex items-center gap-1">
+                                <Film className="w-3 h-3" />
+                                {movie.title}
+                            </Badge>
+                        ))}
+                    </div>
+                </div>
+                <h2 className="text-xl font-bold mt-4">Movie Credits</h2>
+                <Accordion type="single" collapsible className="w-full">
+                    {movieCredits.map((movie) => (
+                        <AccordionItem key={movie.id} value={movie.id.toString()}>
+                            <AccordionTrigger>{movie.title}</AccordionTrigger>
+                            <AccordionContent>
+                                <p>{movie.overview}</p>
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            </CardContent>
+        </Card>
     );
 };
 // export default function Page({ params }: { params: { slug: string } }) {

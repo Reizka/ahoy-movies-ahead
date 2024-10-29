@@ -33,6 +33,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 import { Label } from "@/components/ui/label"
 import Link from 'next/link';
+import ActorPreview from './ActorPreview/index';
 
 
 export function ArtistAvatar({ src, alt }) {
@@ -238,7 +239,6 @@ const fetchRelatedActors = async (personId, range) => {
 // };
 
 const ActorList = ({ personId }) => {
-    const [movies, setMovies] = useState([]);
     const [actors, setActors] = useState([]);
     const [range, setRange] = useState([0, 5]);
 
@@ -274,75 +274,21 @@ const ActorList = ({ personId }) => {
 
     return (
         <div>
-            {/* <RadioGroup defaultValue="comfortable">
-                <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="actors" id="r1" />
-                    <Label htmlFor="r1">Actors</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="movies" id="r2" />
-                    <Label htmlFor="r2">Movies</Label>
-                </div>
-            </RadioGroup> */}
-            <ul className='flex flex-col gap-3 text-sm'>
-                <h3>Related Actors</h3>
-                <div className="flex gap-2">
-                    {actors.map(a => (
-                        <Link key={a.id} href={`/actor/${a.id}`}>
-                            <ArtistAvatar
-                                key={a.id}
-                                src={`https://image.tmdb.org/t/p/w200${a.profile_path}`}
-                                alt={a.name}
-                            >
+            {actors.map(actor => (<ActorPreview key={actor.id} actor={actor} knownFor={actor.known_for} />))}
+        </div>
 
-                            </ArtistAvatar>
-                        </Link>
-                    ))}
-
-                </div>
-                {loading && <AvatarSkeleton />}
-            </ul>
-        </div>)
-
+    )
 }
 
-const Person = ({ profile_path, name, id, ...rest }) => {
+const Person = (props) => {
     const [movieListVisible, setMovieListVisible] = useState(false);
 
     return (
         <li role="button"
             className={`transition-all max-w-96`}
         >
-            <Accordion
-                type="single" collapsible className="w-full"
-            >
+            <ActorPreview personId={props.id} {...props} range={[0, 5]} />
 
-                <AccordionItem value="item-1">
-
-                    <AccordionTrigger className="w-full">
-
-                        <div role="button" className='flex items-center' onClick={() => setMovieListVisible(!movieListVisible)}>
-                            <div className='mr-3'>
-                                <ArtistAvatar
-                                    src={`https://image.tmdb.org/t/p/w200${profile_path}`}
-                                    alt={name}
-                                ></ArtistAvatar>
-                            </div>
-                            <p className="mr-auto">{name}</p>
-
-                        </div>
-
-                    </AccordionTrigger>
-                    <AccordionContent >
-                        <div className="flex flex-col gap-2">
-                            <p>{rest.known_for_department}</p>
-                            <p>{rest.known_for.map(m => m.title).join(', ')}</p>
-                        </div>
-                        <ActorList personId={id} />
-                    </AccordionContent>
-                </AccordionItem>
-
-            </Accordion>
         </li >
     );
 };
@@ -352,7 +298,7 @@ const PeopleList = () => {
 
     useEffect(() => {
         fetchPeople().then(ps => {
-            console.log('data', ps);
+            console.log('data people', ps);
             setPeople(ps.results);
 
         }).catch(error => console.error(error));
@@ -364,8 +310,10 @@ const PeopleList = () => {
 
     return (
         <ul className='flex flex-col gap-3' >
-            {people.map(person => (
-                <Person key={person.id} {...person}>{person.name}</Person>
+            {people.map(actor => (
+                <li>
+                    <ActorPreview actor={actor} id={actor.id} range={[0, 5]} key={actor.id}>{actor.name}</ActorPreview>
+                </li>
             ))}
         </ul>
     );

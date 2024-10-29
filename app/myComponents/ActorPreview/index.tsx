@@ -70,7 +70,7 @@ const fetchMovieCast = async (movieId) => {
 
 
 const ActorPreviewPage = ({ id, range, ...rest }) => {
-    const [relatedActors, setRelatedActors] = useState([]);
+    const [relatedActors, setRelatedActors] = useState(null);
     const [loading, setLoading] = useState(true);
 
     const loadData = useCallback(() => {

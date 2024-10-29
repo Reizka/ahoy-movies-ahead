@@ -6,8 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Film, Star, Users } from "lucide-react"
-import ActorPreviewPage from "./index"
 import Link from "next/link"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface Actor {
     id: string
@@ -28,6 +28,24 @@ interface ActorPreviewProps {
     relatedActors: Actor[]
 }
 
+function AvatarSkeleton() {
+    return (
+        <div className="flex items-center space-x-4">
+            <div className="flex">
+                <Skeleton className="h-14 w-12 rounded-full" />
+                <Skeleton className="w-full h-8" />
+            </div>
+            <div className="flex">
+                <Skeleton className="h-14 w-12 rounded-full" />
+                <Skeleton className="w-full h-8" />
+            </div>
+            <div className="flex">
+                <Skeleton className="h-14 w-12 rounded-full" />
+                <Skeleton className="w-full h-8" />
+            </div>
+        </div>
+    )
+}
 
 export default function Component({
     actor = {
@@ -57,6 +75,8 @@ export default function Component({
                 : [...prev, value]
         )
     }
+
+    console.log('actor', actor);
 
     return (
         <Accordion type="multiple" value={openItems} className="w-full max-w-md mx-auto">
@@ -99,24 +119,24 @@ export default function Component({
                                 <Users className="w-4 h-4 mr-2" />
                                 Related Actors
                             </h4>
-                            <ScrollArea className="h-[100px]" >
-                                <ul className="space-y-2 ml-6">
-                                    {relatedActors.map(relatedActor => (
-                                        relatedActors.map(relatedActor => (
-                                            <Link key={relatedActor.id} href={`/actor/${relatedActor.id}`} className="flex items-center gap-2">
-                                                <Avatar className="w-8 h-8">
-                                                    <AvatarImage
-                                                        src={`https://image.tmdb.org/t/p/w200${relatedActor.profile_path}`}
-                                                        alt={relatedActor.name} />
-                                                    <AvatarFallback>{relatedActor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                                                </Avatar>
-                                                <span className="text-sm">{relatedActor.name}</span>
-                                                <Badge variant="secondary" className="ml-auto text-xs">
-                                                    <Star className="w-2 h-2 mr-1" />
-                                                    {relatedActor.popularity.toFixed(1)}
-                                                </Badge>
-                                            </Link>
-                                        ))
+                            <ScrollArea className="h-[200px]" >
+                                <ul className="space-y-2">
+                                    {!relatedActors && <AvatarSkeleton />}
+                                    {relatedActors?.map(relatedActor => (
+                                        <Link key={relatedActor.id} href={`/actor/${relatedActor.id}`} className="flex items-center gap-2">
+                                            <Avatar className="w-8 h-8">
+                                                <AvatarImage
+                                                    src={`https://image.tmdb.org/t/p/w200${relatedActor.profile_path}`}
+                                                    alt={relatedActor.name}
+                                                />
+                                                <AvatarFallback>{relatedActor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                            </Avatar>
+                                            <span className="text-sm">{relatedActor.name}</span>
+                                            <Badge variant="secondary" className="ml-auto text-xs">
+                                                <Star className="w-2 h-2 mr-1" />
+                                                {relatedActor.popularity.toFixed(1)}
+                                            </Badge>
+                                        </Link>
                                     ))}
                                 </ul>
                             </ScrollArea>

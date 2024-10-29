@@ -17,8 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        {children}
+      <body className="flex h-svh">
+        <div className="max-w-prose m-auto p-3 flex-1">
+          {children}
+
+        </div>
       </body>
     </html>
   );

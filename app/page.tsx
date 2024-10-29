@@ -1,6 +1,14 @@
 
+"use client"
+import People from "./myComponents/People"
 export default function Page() {
-  return <h1>Landing page</h1>
+  return (
+    <div className="">
+      <h1>Landing page</h1>
+      <People />
+    </div>
+  )
+
 }
 
 

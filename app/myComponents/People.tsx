@@ -66,8 +66,8 @@ const PeopleList = () => {
     }, []);
 
     return (
-        <ul className='flex flex-col gap-3' >
-            {!people && Array.from({ length: 5 }).map((_, index) => (
+        <ul className='flex flex-col gap-3 w-full' >
+            {!people && Array.from({ length: 10 }).map((_, index) => (
                 <li key={index}>
                     <ActorPreviewSkeleton />
                 </li>

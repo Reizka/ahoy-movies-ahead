@@ -30,18 +30,26 @@ interface ActorPreviewProps {
 
 function AvatarSkeleton() {
     return (
-        <div className="flex items-center space-x-4">
-            <div className="flex">
-                <Skeleton className="h-14 w-12 rounded-full" />
-                <Skeleton className="w-full h-8" />
+        <div className="space-y-2">
+            <div className="flex items-center">
+                <Skeleton className="h-10 w-10 rounded-full mr-2" />
+                <Skeleton className="ml-auto w-14 h-4" />
             </div>
-            <div className="flex">
-                <Skeleton className="h-14 w-12 rounded-full" />
-                <Skeleton className="w-full h-8" />
+            <div className="flex items-center">
+                <Skeleton className="h-10 w-10 rounded-full mr-2" />
+                <Skeleton className="ml-auto w-14 h-4" />
             </div>
-            <div className="flex">
-                <Skeleton className="h-14 w-12 rounded-full" />
-                <Skeleton className="w-full h-8" />
+            <div className="flex items-center">
+                <Skeleton className="h-10 w-10 rounded-full mr-2" />
+                <Skeleton className="ml-auto w-14 h-4" />
+            </div>
+            <div className="flex items-center">
+                <Skeleton className="h-10 w-10 rounded-full mr-2" />
+                <Skeleton className="ml-auto w-14 h-4" />
+            </div>
+            <div className="flex items-center">
+                <Skeleton className="h-10 w-10 rounded-full mr-2" />
+                <Skeleton className="ml-auto w-14 h-4" />
             </div>
         </div>
     )
@@ -79,7 +87,7 @@ export default function Component({
     console.log('actor', actor);
 
     return (
-        <Accordion type="multiple" value={openItems} className="w-full max-w-md mx-auto">
+        <Accordion type="multiple" value={openItems} className="w-full ">
             <AccordionItem value={actor.id}>
                 <AccordionTrigger onClick={() => toggleAccordion(actor.id)} className="hover:no-underline">
                     <div className="flex items-center gap-4">

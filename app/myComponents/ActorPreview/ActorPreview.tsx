@@ -84,16 +84,16 @@ export default function Component({
         )
     }
 
-    console.log('actor', actor);
-
     return (
         <Accordion type="multiple" value={openItems} className="w-full ">
             <AccordionItem value={actor.id}>
                 <AccordionTrigger onClick={() => toggleAccordion(actor.id)} className="hover:no-underline">
-                    <div className="flex items-center gap-4">
+                    <Link className="flex items-center gap-4"
+
+                        href={`/actor/${actor.id}`}
+                    >
                         <Avatar>
                             <AvatarImage src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-
                                 alt={actor.name} />
                             <AvatarFallback>{actor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
@@ -104,7 +104,7 @@ export default function Component({
                                 {actor.popularity.toFixed(1)}
                             </Badge>
                         </div>
-                    </div>
+                    </Link>
                 </AccordionTrigger>
                 <AccordionContent>
                     <div className="space-y-4 pt-4">
@@ -151,7 +151,7 @@ export default function Component({
                         </div>
                     </div>
                 </AccordionContent>
-            </AccordionItem>
-        </Accordion>
+            </AccordionItem >
+        </Accordion >
     )
 }

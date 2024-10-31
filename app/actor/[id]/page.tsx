@@ -1,13 +1,10 @@
 "use client"
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import LoadingSpinner from '../../components/LoadingSpinner';
 import { Button } from '@/components/ui/button';
+import ExpandableParagraph from '@/app/myComponents/ExpandableParagraph';
 import {
     Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
 } from "@/components/ui/accordion"
 
 import {
@@ -16,57 +13,15 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 
-
-const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTQ1ZmNlYTYyMzIwMDQyNjA0YTcyYzFjNzE3MzQxZiIsIm5iZiI6MTczMDEyMDA2NS4wNzIwNDEsInN1YiI6IjY3MWY4OGUxNzY5MTA3ZDc3YjQ4NGE1MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.WilCT_YVeTsbcbtJM2UjuFPz5JKE2CycjwokAfTY-IY';
-
-const fetchActorDetails = async (actorId) => {
-    const url = `https://api.themoviedb.org/3/person/${actorId}`;
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${TMDB_TOKEN}`
-        }
-    };
-
-    try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch actor details for ID ${actorId}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error(`Error fetching actor details for ID ${actorId}:`, error);
-        return null;
-    }
-};
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CalendarDays, Film, Star, TrendingUp } from "lucide-react"
+import MovieOverview from '@/app/myComponents/MovieOverviewAccordionItem';
+import { Skeleton } from '@/components/ui/skeleton';
+import { fetchActorDetails, fetchMovieCredits } from '@/app/fetchData';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-const fetchMovieCredits = async (actorId) => {
-    const url = `https://api.themoviedb.org/3/person/${actorId}/movie_credits`;
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${TMDB_TOKEN}`
-        }
-    };
 
-    try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch movie credits for actor ID ${actorId}`);
-        }
-        const json = await response.json();
-        return json.cast;
-    } catch (error) {
-        console.error(`Error fetching movie credits for actor ID ${actorId}:`, error);
-        return [];
-    }
-};
 
 const ActorPage = ({ params }) => {
     // const router = useRouter();
@@ -80,8 +35,8 @@ const ActorPage = ({ params }) => {
             const fetchData = async () => {
                 setLoading(true);
                 const actorDetails = await fetchActorDetails(id);
-                console.log('det', actorDetails);
                 const credits = await fetchMovieCredits(id);
+                console.log('credits', credits);
                 setActor(actorDetails);
                 setMovieCredits(credits);
                 setLoading(false);
@@ -91,7 +46,21 @@ const ActorPage = ({ params }) => {
     }, [id]);
 
     if (loading) {
-        return <div>Loading...</div>
+        return (<Card className="w-full max-w-3xl mx-auto">
+            <CardHeader className="flex flex-col sm:flex-row items-center gap-4">
+                <Skeleton className="w-32 h-32 sm:w-40 sm:h-40 rounded-full" />
+                <div className="text-center sm:text-left">
+                    <Skeleton className="h-8 w-48 mb-2" />
+                    <Skeleton className="h-4 w-32" />
+                </div>
+            </CardHeader>
+            <CardDescription className="p-4">
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-full mb-2" />
+            </CardDescription>
+        </Card>)
+
     }
 
     if (!actor) {
@@ -124,7 +93,9 @@ const ActorPage = ({ params }) => {
             <CardContent className="space-y-4">
                 <div>
                     <h3 className="font-semibold mb-2">Biography</h3>
-                    <p className="text-sm text-muted-foreground">{actor.biography}</p>
+                    <ExpandableParagraph >
+                        {actor.biography}
+                    </ExpandableParagraph>
                 </div>
                 <div>
                     <h3 className="font-semibold mb-2">Place of Birth</h3>
@@ -142,18 +113,16 @@ const ActorPage = ({ params }) => {
                     </div>
                 </div>
                 <h2 className="text-xl font-bold mt-4">Movie Credits</h2>
-                <Accordion type="single" collapsible className="w-full">
-                    {movieCredits.map((movie) => (
-                        <AccordionItem key={movie.id} value={movie.id.toString()}>
-                            <AccordionTrigger>{movie.title}</AccordionTrigger>
-                            <AccordionContent>
-                                <p>{movie.overview}</p>
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
+                <ScrollArea className="h-96 overflow-auto ">
+                    <Accordion type="single" collapsible className="w-full">
+                        {movieCredits.map((movie) => (
+                            <MovieOverview key={movie.id} {...movie} />
+                        ))}
+
+                    </Accordion>
+                </ScrollArea>
             </CardContent>
-        </Card>
+        </Card >
     );
 };
 // export default function Page({ params }: { params: { slug: string } }) {

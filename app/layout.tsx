@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 
@@ -17,11 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex h-svh">
-        <div className="max-w-prose m-auto p-3 flex-1">
-          {children}
+      <body className="flex flex-col h-svh">
+        <ScrollArea className="max-w-prose m-auto p-3 flex-1 flex flex-col w-full">
 
-        </div>
+          {children}
+        </ScrollArea>
       </body>
     </html>
   );

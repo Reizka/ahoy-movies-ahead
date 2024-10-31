@@ -89,8 +89,8 @@ export default function Component({
             <AccordionItem value={actor.id}>
                 <AccordionTrigger onClick={() => toggleAccordion(actor.id)} className="hover:no-underline">
                     <Link className="flex items-center gap-4"
-
                         href={`/actor/${actor.id}`}
+                        onClick={e => e.stopPropagation()}
                     >
                         <Avatar>
                             <AvatarImage src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}

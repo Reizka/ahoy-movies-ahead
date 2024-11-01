@@ -52,7 +52,7 @@ export default function Page() {
           setPage(prevPage => prevPage + 1);
         }
       },
-      { threshold: 1.0 }
+      { threshold: 0.8 }
     );
 
     if (sentinelRef.current) {
@@ -71,7 +71,7 @@ export default function Page() {
 
       <Masonry actors={people} loading={loading}></Masonry>
       <WelcomeDialog open={dialogOpen} onOpenChange={() => setDialogOpen(!dialogOpen)} />
-      <div ref={sentinelRef}></div>
+      <div className="h-20" ref={sentinelRef}></div>
     </>
   );
 }

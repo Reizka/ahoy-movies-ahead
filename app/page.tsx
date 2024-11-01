@@ -52,7 +52,7 @@ export default function Page() {
           setPage(prevPage => prevPage + 1);
         }
       },
-      { threshold: 0.8 }
+      { threshold: 0.6 }
     );
 
     if (sentinelRef.current) {

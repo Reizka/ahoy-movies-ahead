@@ -5,6 +5,12 @@ import { Star, Film } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { Skeleton } from "@/components/ui/skeleton"
+import { use, useEffect, useRef, useState } from "react"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { fetchRelatedActors } from "../fetchData"
+import autoAnimate from '@formkit/auto-animate'
+
 
 interface Actor {
     id: number
@@ -43,28 +49,42 @@ export default function Component({
     ], loading = false
 }: ActorMasonryProps) {
     console.log('loading', loading)
+    const parent0 = useRef(null)
+    const parent1 = useRef(null)
+    const parent2 = useRef(null)
+    const parent3 = useRef(null)
+
+
+
+    useEffect(() => {
+        parent0.current && autoAnimate(parent0.current)
+        parent1.current && autoAnimate(parent1.current)
+        parent2.current && autoAnimate(parent2.current)
+        parent3.current && autoAnimate(parent3.current)
+    }, [parent0, parent1, parent2, parent3])
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="space-y-4">
+                <div className="space-y-4" ref={parent0}>
                     {actors.filter((_, index) => index % 4 === 0).map((actor) => (
                         <ActorCard key={actor.id} actor={actor} />
                     ))}
                     {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
                 </div>
-                <div className="space-y-4 md:mt-12">
+                <div className="space-y-4 md:mt-12" ref={parent1}>
                     {actors.filter((_, index) => index % 4 === 1).map((actor) => (
                         <ActorCard key={actor.id} actor={actor} />
                     ))}
                     {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-4" ref={parent2}>
                     {actors.filter((_, index) => index % 4 === 2).map((actor) => (
                         <ActorCard key={actor.id} actor={actor} />
                     ))}
                     {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
                 </div>
-                <div className="space-y-4 mt-12">
+                <div className="space-y-4 mt-12" ref={parent3}>
                     {actors.filter((_, index) => index % 4 === 3).map((actor) => (
                         <ActorCard key={actor.id} actor={actor} />
                     ))}
@@ -79,6 +99,22 @@ export default function Component({
 
 
 function ActorCard({ actor }: { actor: Actor }) {
+    const [knownFor, setKnownFor] = useState<boolean>(true);
+    const [acts, setActs] = useState<Actor[]>([])
+
+    const parent = useRef(null)
+    useEffect(() => {
+        fetchRelatedActors(actor.id, [0, 1]).then(data =>
+            setActs(data.slice(0, 5))
+        )
+
+    }, [actor.id])
+
+    useEffect(() => {
+
+        parent.current && autoAnimate(parent.current)
+    }, [])
+
     return (
         <Card className="overflow-hidden">
             <CardContent className="p-0">
@@ -98,17 +134,40 @@ function ActorCard({ actor }: { actor: Actor }) {
                 </Link>
                 <div className="p-4">
                     <div className="flex justify-between items-center mb-4">
-                        <Badge variant="secondary" className="flex items-center">
+                        <Badge variant="secondary" className="flex flex-none items-center">
                             <Star className="w-3 h-3 mr-1 fill-primary" />
                             {actor.popularity.toFixed(1)}
                         </Badge>
                     </div>
-                    <h3 className="font-semibold text-sm mb-2">Known For</h3>
-                    <ul className="space-y-1">
-                        {actor.known_for.map((work, index) => (
+                    <h3 className="font-semibold text-sm mb-2">
+                        <div className="flex items-center w-full">
+                            <Label htmlFor={`show-worked-with-${actor.id}`} className="text-xs">
+                                {knownFor ? "Known for" : "Worked with"}
+                            </Label>
+                            <Switch
+                                className="ml-auto"
+                                id={`show-worked-with-${actor.id}`}
+                                checked={knownFor}
+                                onCheckedChange={setKnownFor}
+                                size="sm"
+                            />
+                        </div>
+                    </h3>
+                    <ul className="space-y-1" ref={parent}>
+                        {knownFor ? actor.known_for.filter(d => d.title).map((work, index) => (
                             <li key={index} className="flex items-center text-sm text-muted-foreground">
-                                <Film className="w-3 h-3 mr-2" />
+                                <Film className="w-3 h-3 mr-2 flex-none" />
                                 {work.title}
+                            </li>
+                        )) : acts.map((actor, index) => (
+                            <li key={actor.id} className="flex items-center space-x-1">
+                                <Avatar className="w-6 h-6">
+                                    <AvatarImage
+                                        src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+                                        alt={actor.name} />
+                                    <AvatarFallback>{actor.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <span className="text-xs">{actor.name}</span>
                             </li>
                         ))}
                     </ul>
@@ -117,3 +176,4 @@ function ActorCard({ actor }: { actor: Actor }) {
         </Card>
     )
 }
+

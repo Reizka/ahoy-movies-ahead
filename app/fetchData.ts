@@ -24,7 +24,7 @@ export const fetchMovieCredits = async (personId) => {
     }
 };
 
-export const fetchRelatedActors = async (personId, range) => {
+export const fetchRelatedActors = async (personId, range = [0, 10]) => {
     const movieCredits = await fetchMovieCredits(personId);
     const moviesInRange = (movieCredits || []).slice(range[0], range[1]);
 

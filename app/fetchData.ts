@@ -66,6 +66,29 @@ export const fetchMovieCast = async (movieId) => {
     };
 }
 
+export const fetchMovieDetails = async (movieId) => {
+    const url = `https://api.themoviedb.org/3/movie/${movieId}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${TMDB_TOKEN}`
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch details for movie ID ${movieId}`);
+        }
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        console.error(`Error fetching movie details for movie ID ${movieId}:`, error);
+        return null;
+    }
+};
+
 export const fetchActorDetails = async (actorId) => {
     const url = `https://api.themoviedb.org/3/person/${actorId}`;
     const options = {

@@ -63,7 +63,7 @@ export default function Component({
         popularity: 84.23,
         range: [0, 3]
     },
-    knownFor = [
+    known_for = [
         { id: "1", title: "Forrest Gump", releaseYear: 1994 },
         { id: "2", title: "Saving Private Ryan", releaseYear: 1998 },
         { id: "3", title: "Cast Away", releaseYear: 2000 }
@@ -72,10 +72,11 @@ export default function Component({
         { id: "2", name: "Tim Allen", imageUrl: "/placeholder.svg?height=50&width=50", popularity: 62.45 },
         { id: "3", name: "Meg Ryan", imageUrl: "/placeholder.svg?height=50&width=50", popularity: 55.78 },
         { id: "4", name: "Gary Sinise", imageUrl: "/placeholder.svg?height=50&width=50", popularity: 48.92 }
-    ]
+    ], ...rest
 }: ActorPreviewProps) {
     const [openItems, setOpenItems] = useState<string[]>([])
 
+    console.log('actor', rest);
     const toggleAccordion = (value: string) => {
         setOpenItems(prev =>
             prev.includes(value)
@@ -114,7 +115,7 @@ export default function Component({
                                 Known For
                             </h4>
                             <ul className="space-y-2">
-                                {knownFor.map(movie => (
+                                {actor.known_for.map(movie => (
                                     <li key={movie.id} className="flex justify-between text-sm">
                                         <span>{movie.title}</span>
                                         <span className="text-muted-foreground">{movie.releaseYear}</span>

@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import ExpandableParagraph from '@/app/myComponents/ExpandableParagraph';
+import ExpandableParagraph from '@/app/myComponents/TruncatedParagraph';
 import {
     Accordion,
 } from "@/components/ui/accordion"
@@ -20,6 +20,7 @@ import MovieOverview from '@/app/myComponents/MovieOverviewAccordionItem';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fetchActorDetails, fetchMovieCredits } from '@/app/fetchData';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import ActorSkeleton from './ActorSkeleton';
 
 
 
@@ -46,20 +47,7 @@ const ActorPage = ({ params }) => {
     }, [id]);
 
     if (loading) {
-        return (<Card className="w-full max-w-3xl mx-auto">
-            <CardHeader className="flex flex-col sm:flex-row items-center gap-4">
-                <Skeleton className="w-32 h-32 sm:w-40 sm:h-40 rounded-full" />
-                <div className="text-center sm:text-left">
-                    <Skeleton className="h-8 w-48 mb-2" />
-                    <Skeleton className="h-4 w-32" />
-                </div>
-            </CardHeader>
-            <CardDescription className="p-4">
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-full mb-2" />
-            </CardDescription>
-        </Card>)
+        return <ActorSkeleton />;
 
     }
 
@@ -113,14 +101,12 @@ const ActorPage = ({ params }) => {
                     </div>
                 </div>
                 <h2 className="text-xl font-bold mt-4">Movie Credits</h2>
-                <ScrollArea className="h-96 overflow-auto ">
-                    <Accordion type="single" collapsible className="w-full">
-                        {movieCredits.map((movie) => (
-                            <MovieOverview key={movie.id} {...movie} />
-                        ))}
+                <Accordion type="single" collapsible className="w-full">
+                    {movieCredits.map((movie) => (
+                        <MovieOverview key={movie.id} {...movie} />
+                    ))}
 
-                    </Accordion>
-                </ScrollArea>
+                </Accordion>
             </CardContent>
         </Card >
     );

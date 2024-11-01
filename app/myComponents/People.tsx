@@ -22,36 +22,13 @@ export function ActorPreviewSkeleton() {
     )
 }
 
-const fetchPeople = () => {
-    const url = 'https://api.themoviedb.org/3/person/popular?language=en-US&page=1';
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTQ1ZmNlYTYyMzIwMDQyNjA0YTcyYzFjNzE3MzQxZiIsIm5iZiI6MTczMDEyMDA2NS4wNzIwNDEsInN1YiI6IjY3MWY4OGUxNzY5MTA3ZDc3YjQ4NGE1MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.WilCT_YVeTsbcbtJM2UjuFPz5JKE2CycjwokAfTY-IY'
-        }
-    };
-
-    return fetch(url, options)
-        .then(res => res.json())
-        .catch(err => console.error(err));
-};
 
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+// const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 
 
-const PeopleList = () => {
-    const [people, setPeople] = useState(null);
-
-    useEffect(() => {
-        fetchPeople().then(ps => {
-            console.log('data people', ps);
-            setPeople(ps.results);
-
-        }).catch(error => console.error(error));
-    }, []);
+const PeopleList = ({ people }) => {
 
     return (
         <ul className='flex flex-col gap-3 w-full' >
@@ -70,13 +47,4 @@ const PeopleList = () => {
     );
 };
 
-const People = () => {
-    return (
-        <div>
-            <h1>People</h1>
-            <PeopleList />
-        </div>
-    );
-};
-
-export default People;
+export default PeopleList;

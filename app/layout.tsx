@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex flex-col h-svh">
-        <ScrollArea className="max-w-prose m-auto p-3 flex-1 flex flex-col w-full">
+        <ScrollArea className="max-w m-auto p-3 flex-1 flex flex-col w-full">
 
           {children}
         </ScrollArea>

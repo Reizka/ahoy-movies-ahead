@@ -17,9 +17,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { CalendarDays, Film, Star, TrendingUp } from "lucide-react"
 import MovieOverview from '@/app/myComponents/MovieOverviewAccordionItem';
-import { Skeleton } from '@/components/ui/skeleton';
 import { fetchActorDetails, fetchMovieCredits } from '@/app/fetchData';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import ActorSkeleton from './ActorSkeleton';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationLink, PaginationNext, PaginationItem, PaginationPrevious } from '@/components/ui/pagination';
 
@@ -122,7 +120,7 @@ const ActorPage = ({ params }) => {
                             <PaginationPrevious href="#" />
                         </PaginationItem>
                         {Array.from({ length: maxNumPages }).map((_, index) => (
-                            <PaginationItem key={index}>
+                            <PaginationItem key={index} onClick={() => console.log('click')}>
                                 <PaginationLink href="#">{index + 1}</PaginationLink>
                             </PaginationItem>
                         ))}

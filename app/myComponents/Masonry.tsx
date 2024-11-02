@@ -156,18 +156,24 @@ function ActorCard({ actor }: { actor: Actor }) {
                     <ul className="space-y-1" ref={parent}>
                         {knownFor ? actor.known_for.filter(d => d.title).map((work, index) => (
                             <li key={index} className="flex items-center text-sm text-muted-foreground">
-                                <Film className="w-3 h-3 mr-2 flex-none" />
-                                {work.title}
+                                <li key={index} className="flex items-center text-sm text-muted-foreground">
+                                    <Film className="w-3 h-3 mr-2 flex-none" />
+                                    <Link href={`/film/${work.id}`}>
+                                        {work.title}
+                                    </Link>
+                                </li>
                             </li>
                         )) : acts.map((actor, index) => (
                             <li key={actor.id} className="flex items-center space-x-1">
-                                <Avatar className="w-6 h-6">
+                                <Avatar className="w-6 h-6 mb-1">
                                     <AvatarImage
                                         src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
                                         alt={actor.name} />
                                     <AvatarFallback>{actor.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <span className="text-xs">{actor.name}</span>
+                                <Link href={`/actor/${actor.id}`}>
+                                    {actor.name}
+                                </Link>
                             </li>
                         ))}
                     </ul>

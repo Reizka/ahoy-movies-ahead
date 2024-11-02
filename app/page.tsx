@@ -68,7 +68,6 @@ export default function Page() {
 
   return (
     <>
-
       <Masonry actors={people} loading={loading}></Masonry>
       <WelcomeDialog open={dialogOpen} onOpenChange={() => setDialogOpen(!dialogOpen)} />
       <div className="h-20" ref={sentinelRef}></div>

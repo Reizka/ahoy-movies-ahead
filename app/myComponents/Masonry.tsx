@@ -154,14 +154,12 @@ function ActorCard({ actor }: { actor: Actor }) {
                         </div>
                     </h3>
                     <ul className="space-y-1" ref={parent}>
-                        {knownFor ? actor.known_for.filter(d => d.title).map((work, index) => (
+                        {knownFor ? actor.known_for.map((work, index) => (
                             <li key={index} className="flex items-center text-sm text-muted-foreground">
-                                <li key={index} className="flex items-center text-sm text-muted-foreground">
-                                    <Film className="w-3 h-3 mr-2 flex-none" />
-                                    <Link href={`/film/${work.id}`}>
-                                        {work.title}
-                                    </Link>
-                                </li>
+                                <Film className="w-3 h-3 mr-2 flex-none" />
+                                <Link href={`/film/${work.id}`}>
+                                    {work.title}
+                                </Link>
                             </li>
                         )) : acts.map((actor, index) => (
                             <li key={actor.id} className="flex items-center space-x-1">

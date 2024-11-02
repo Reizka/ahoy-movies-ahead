@@ -7,6 +7,7 @@ import {
     Accordion,
 } from "@/components/ui/accordion"
 
+import PaginatedList from '@/app/myComponents/PaginatedList';
 import {
     Avatar,
     AvatarFallback,
@@ -22,15 +23,12 @@ import ActorSkeleton from './ActorSkeleton';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationLink, PaginationNext, PaginationItem, PaginationPrevious } from '@/components/ui/pagination';
 
 
-
 const ActorPage = ({ params }) => {
     // const router = useRouter();
     const { id } = params;
     const [actor, setActor] = useState(null);
     const [movieCredits, setMovieCredits] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
 
     useEffect(() => {
         if (id) {
@@ -47,7 +45,6 @@ const ActorPage = ({ params }) => {
         }
     }, [id]);
 
-    const totalPages = Math.ceil(movieCredits.length / itemsPerPage);
     if (loading) {
         return <ActorSkeleton />;
 
@@ -56,10 +53,6 @@ const ActorPage = ({ params }) => {
     if (!actor) {
         return <div>Actor not found.</div>;
     }
-    const currentCredits = movieCredits.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-    const numPages = Math.ceil(movieCredits.length / itemsPerPage);
-    const maxNumPages = Math.min(5, numPages);
-
 
 
     return (
@@ -108,30 +101,16 @@ const ActorPage = ({ params }) => {
                     </div>
                 </div>
                 <h2 className="text-xl font-bold mt-4">Movie Credits</h2>
-                <Accordion type="single" collapsible className="w-full">
-                    {currentCredits.map((movie) => (
-                        <MovieOverview key={movie.id} {...movie} />
-                    ))}
+                <PaginatedList items={movieCredits}>{
+                    (curMovieCredits) => (
+                        <Accordion>
+                            {curMovieCredits.map(d => (
+                                <MovieOverview key={d.id} {...d}></MovieOverview>
+                            ))}
 
-                </Accordion>
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious href="#" />
-                        </PaginationItem>
-                        {Array.from({ length: maxNumPages }).map((_, index) => (
-                            <PaginationItem key={index} onClick={() => console.log('click')}>
-                                <PaginationLink href="#">{index + 1}</PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        <PaginationItem>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationNext href="#" />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
+                        </Accordion>
+                    )
+                }</PaginatedList>
             </CardContent>
         </Card >
     );

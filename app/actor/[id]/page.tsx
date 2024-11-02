@@ -21,6 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { fetchActorDetails, fetchMovieCredits } from '@/app/fetchData';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ActorSkeleton from './ActorSkeleton';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationLink, PaginationNext, PaginationItem, PaginationPrevious } from '@/components/ui/pagination';
 
 
 
@@ -30,6 +31,8 @@ const ActorPage = ({ params }) => {
     const [actor, setActor] = useState(null);
     const [movieCredits, setMovieCredits] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
     useEffect(() => {
         if (id) {
@@ -46,6 +49,7 @@ const ActorPage = ({ params }) => {
         }
     }, [id]);
 
+    const totalPages = Math.ceil(movieCredits.length / itemsPerPage);
     if (loading) {
         return <ActorSkeleton />;
 
@@ -54,6 +58,11 @@ const ActorPage = ({ params }) => {
     if (!actor) {
         return <div>Actor not found.</div>;
     }
+    const currentCredits = movieCredits.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const numPages = Math.ceil(movieCredits.length / itemsPerPage);
+    const maxNumPages = Math.min(5, numPages);
+
+
 
     return (
         <Card className="w-full max-w-3xl mx-auto">
@@ -102,11 +111,29 @@ const ActorPage = ({ params }) => {
                 </div>
                 <h2 className="text-xl font-bold mt-4">Movie Credits</h2>
                 <Accordion type="single" collapsible className="w-full">
-                    {movieCredits.map((movie) => (
+                    {currentCredits.map((movie) => (
                         <MovieOverview key={movie.id} {...movie} />
                     ))}
 
                 </Accordion>
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious href="#" />
+                        </PaginationItem>
+                        {Array.from({ length: maxNumPages }).map((_, index) => (
+                            <PaginationItem key={index}>
+                                <PaginationLink href="#">{index + 1}</PaginationLink>
+                            </PaginationItem>
+                        ))}
+                        <PaginationItem>
+                            <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationNext href="#" />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
             </CardContent>
         </Card >
     );

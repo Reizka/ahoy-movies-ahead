@@ -39,13 +39,6 @@ const MovieOverviewAccordionItem = ({ id, title, overview, release_date, rating,
                     <div className="flex flex-col h-full py-2 overflow-x-auto">
                         <ExpandableParagraph expandable={false} limit={200}>{overview}</ExpandableParagraph>
 
-                        <div className="flex flex-wrap gap-2 mt-auto">
-                            <Badge variant="secondary">Release Date: {release_date}</Badge>
-                            <Badge variant="secondary">Rating: {vote_average}</Badge>
-                            {genres?.map((genre, index) => (
-                                <Badge key={index} variant="outline">{genre}</Badge>
-                            ))}
-                        </div>
                         <ScrollArea className="flex gap-2 mt-3 overflow-x-auto mb-3 ">
                             {movieCast?.length > 0 ? (
                                 movieCast.map(actor => (
@@ -63,6 +56,13 @@ const MovieOverviewAccordionItem = ({ id, title, overview, release_date, rating,
                             ) : (
                                 <p>No cast information available.</p>
                             )}</ScrollArea>
+                        <div className="flex flex-wrap gap-2 mt-auto">
+                            <Badge variant="secondary">Release Date: {release_date}</Badge>
+                            <Badge variant="secondary">Rating: {vote_average}</Badge>
+                            {genres?.map((genre, index) => (
+                                <Badge key={index} variant="outline">{genre}</Badge>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </AccordionContent>

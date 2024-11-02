@@ -1,18 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import autoAnimate from '@formkit/auto-animate'
 
 export default function ExpandableParagraph({ children: fullText = "", limit = 800, className = '', expandable = true }) {
     const [isOpen, setIsOpen] = useState(false)
 
     const truncatedText = fullText.slice(0, limit) + '...'
+    const parent = useRef(null)
+
+    useEffect(() => {
+        parent.current && autoAnimate(parent.current)
+    }, [])
 
     return (
         <div className={`${className} transition-all `}>
-            <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-                <p className="mb-2">
+            <Collapsible ref={parent} className="transition-all" open={isOpen} onOpenChange={setIsOpen}>
+                <p ref={parent} className="mb-2 transition-all" >
                     {isOpen ? fullText : truncatedText}
                 </p>
                 <CollapsibleContent>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { searchPeople } from "./fetchData";
+import { debounce } from "@/lib/utils";
 
 const fetchPeople = (page = 1) => {
   const url = `https://api.themoviedb.org/3/person/popular?language=en-US&page=${page}&language=en-US`;
@@ -28,6 +29,7 @@ const makeSet = (prevPeople, data) => {
   const s = new Set([...prevPeople.map(d => d.id), ...data.results.map(d => d.id)])
   return [...s].map(id => [...prevPeople, ...data.results].find(d => d.id === id));
 }
+
 export default function Page() {
   const [people, setPeople] = useState([]);
   const [page, setPage] = useState(1);
@@ -35,13 +37,30 @@ export default function Page() {
   const [dialogOpen, setDialogOpen] = useState(true); // New state for drawer visibility
   const sentinelRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedValue = useDebounce(searchQuery, 500) // 500ms delay
+
+  function useDebounce<T>(value: T, delay: number): T {
+    const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value)
+      }, delay)
+
+      return () => {
+        clearTimeout(handler)
+      }
+    }, [value, delay])
+
+    return debouncedValue
+  }
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
+    console.log('fire')
+    setSearchQuery(e.target.value);
     setPeople([]); // Reset people when search query changes
     setPage(1);
-  };
+  }
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -55,7 +74,7 @@ export default function Page() {
     };
 
     loadPeople();
-  }, [page, searchQuery]);
+  }, [page, debouncedValue]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)

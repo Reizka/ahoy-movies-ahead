@@ -1,13 +1,26 @@
-import { Accordion } from "@/components/ui/accordion"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
-import { LucideScissorsSquareDashedBottom } from "lucide-react";
-import { Children, useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-import { useRouter } from 'next/router';
 
-const rangeArr = (startIndex, endIndex) => {
-    return Array.from({ length: endIndex - startIndex + 1 }, (_, index) => startIndex + index - 1);
+const rangeArr = (startIndex: number, endIndex: number, itemsPerPage=5): number[] => {
+    const length = endIndex - startIndex + 1;
+    if (length < itemsPerPage) {
+        // If range is too small, pad with additional numbers after endIndex
+        return Array.from({ length: itemsPerPage }, (_, index) => {
+            if (index < length) {
+                return startIndex + index - 1;
+            }
+            return endIndex + (index - length + 1);
+        });
+    }
+    if (length > itemsPerPage) {
+        // If range is too large, truncate to 5 items
+        return Array.from({ length: itemsPerPage }, (_, index) => startIndex + index - 1);
+    }
+    // If length is exactly 5, use original logic
+    return Array.from({ length }, (_, index) => startIndex + index - 1);
 };
+
 const PaginatedList = ({ items, children }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -24,6 +37,7 @@ const PaginatedList = ({ items, children }) => {
     useEffect(() => {
         // Initialize the page from URL on component mount
         const params = new URLSearchParams(window.location.search)
+        
         const page = parseInt(params.get('page') || '1', 10)
         setCurrentPage(page)
 
@@ -34,12 +48,15 @@ const PaginatedList = ({ items, children }) => {
             }
         }
 
+    
+
         window.addEventListener('popstate', handlePopState)
 
         return () => {
             window.removeEventListener('popstate', handlePopState)
         }
     }, [])
+
     const updatePage = (newPage: number) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage)
@@ -49,32 +66,22 @@ const PaginatedList = ({ items, children }) => {
         }
     }
 
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-
-    const handleNext = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
     const handlePageClick = (page) => {
         setCurrentPage(page);
     };
-    ;
+
     return (
         <>
             {children(currentItems)}
-            <Pagination>
-                <PaginationContent className="flex items-center">
+            {totalPages > 1 && (
+                <Pagination>
+                    <PaginationContent className="flex items-center">
                     <PaginationItem>
                         <PaginationPrevious onClick={() => updatePage(currentPage - 1)} />
                     </PaginationItem>
                     {curRange.map((page) => (
-                        <PaginationItem key={page} onClick={() => updatePage(page)}>
+                        <PaginationItem key={page} onClick={() => 
+                        updatePage(page)}>
                             <PaginationLink isActive={currentPage === page}>{page}</PaginationLink>
                         </PaginationItem>
                     ))}
@@ -85,13 +92,12 @@ const PaginatedList = ({ items, children }) => {
                             {totalPages}
                         </PaginationLink>
                     </PaginationItem>
-
-
                     <PaginationItem>
                         <PaginationNext onClick={() => updatePage(currentPage + 1)} />
                     </PaginationItem>
                 </PaginationContent>
-            </Pagination>
+                </Pagination>
+            )}
         </>
     )
 }

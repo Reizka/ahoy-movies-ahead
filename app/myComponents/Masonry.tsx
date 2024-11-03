@@ -64,34 +64,32 @@ export default function Component({
     }, [parent0, parent1, parent2, parent3])
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="space-y-4" ref={parent0}>
-                    {actors.filter((_, index) => index % 4 === 0).map((actor) => (
-                        <ActorCard key={actor.id} actor={actor} />
-                    ))}
-                    {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
-                </div>
-                <div className="space-y-4 md:mt-12" ref={parent1}>
-                    {actors.filter((_, index) => index % 4 === 1).map((actor) => (
-                        <ActorCard key={actor.id} actor={actor} />
-                    ))}
-                    {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
-                </div>
-                <div className="space-y-4" ref={parent2}>
-                    {actors.filter((_, index) => index % 4 === 2).map((actor) => (
-                        <ActorCard key={actor.id} actor={actor} />
-                    ))}
-                    {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
-                </div>
-                <div className="space-y-4 mt-12" ref={parent3}>
-                    {actors.filter((_, index) => index % 4 === 3).map((actor) => (
-                        <ActorCard key={actor.id} actor={actor} />
-                    ))}
-                    {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
-                </div>
-                <div className="space-y-4 mt-12">
-                </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="space-y-4" ref={parent0}>
+                {actors.filter((_, index) => index % 4 === 0).map((actor) => (
+                    <ActorCard key={actor.id} actor={actor} />
+                ))}
+                {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
+            </div>
+            <div className="space-y-4 md:mt-12" ref={parent1}>
+                {actors.filter((_, index) => index % 4 === 1).map((actor) => (
+                    <ActorCard key={actor.id} actor={actor} />
+                ))}
+                {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
+            </div>
+            <div className="space-y-4" ref={parent2}>
+                {actors.filter((_, index) => index % 4 === 2).map((actor) => (
+                    <ActorCard key={actor.id} actor={actor} />
+                ))}
+                {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
+            </div>
+            <div className="space-y-4 mt-12" ref={parent3}>
+                {actors.filter((_, index) => index % 4 === 3).map((actor) => (
+                    <ActorCard key={actor.id} actor={actor} />
+                ))}
+                {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
+            </div>
+            <div className="space-y-4 mt-12">
             </div>
         </div>
     )
@@ -111,7 +109,6 @@ function ActorCard({ actor }: { actor: Actor }) {
     }, [actor.id])
 
     useEffect(() => {
-
         parent.current && autoAnimate(parent.current)
     }, [])
 

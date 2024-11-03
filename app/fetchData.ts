@@ -110,3 +110,19 @@ export const fetchActorDetails = async (actorId) => {
         return null;
     }
 };
+export const searchPeople = (query: string, page: number = 1) => {
+    if (!query) return Promise.resolve({ results: [] });
+
+    const url = `https://api.themoviedb.org/3/search/person?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=${page}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${TMDB_TOKEN}`
+        }
+    };
+
+    return fetch(url, options)
+        .then(res => res.json())
+        .catch(err => console.error(err));
+};

@@ -159,8 +159,8 @@ function ActorCard({ actor }: { actor: Actor }) {
                                 </Link>
                             </li>
                         )) : acts.map((actor, index) => (
-                            <li key={actor.id} className="flex items-center space-x-1">
-                                <Avatar className="w-6 h-6 mb-1">
+                            <li key={actor.id} className="flex items-center space-x-1 text-sm text-muted-foreground">
+                                <Avatar className="w-6 h-6 ">
                                     <AvatarImage
                                         src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
                                         alt={actor.name} />

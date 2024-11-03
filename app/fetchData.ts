@@ -126,3 +126,19 @@ export const searchPeople = (query: string, page: number = 1) => {
         .then(res => res.json())
         .catch(err => console.error(err));
 };
+
+
+export const fetchPopularPeople = (page = 1) => {
+    const url = `https://api.themoviedb.org/3/person/popular?language=en-US&page=${page}&language=en-US`;
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTQ1ZmNlYTYyMzIwMDQyNjA0YTcyYzFjNzE3MzQxZiIsIm5iZiI6MTczMDEyMDA2NS4wNzIwNDEsInN1YiI6IjY3MWY4OGUxNzY5MTA3ZDc3YjQ4NGE1MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.WilCT_YVeTsbcbtJM2UjuFPz5JKE2CycjwokAfTY-IY'
+        }
+    };
+
+    return fetch(url, options)
+        .then(res => res.json())
+        .catch(err => console.error(err));
+};

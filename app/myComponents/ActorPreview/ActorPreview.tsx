@@ -132,26 +132,28 @@ export default function Component({
                                 <ul className="space-y-2">
                                     {!relatedActors && <AvatarSkeleton />}
                                     {relatedActors?.map(relatedActor => (
-                                        <Link key={relatedActor.id} href={`/actor/${relatedActor.id}`} className="flex items-center gap-2">
-                                            <Avatar className="w-8 h-8">
-                                                <AvatarImage
-                                                    src={`https://image.tmdb.org/t/p/w200${relatedActor.profile_path}`}
-                                                    alt={relatedActor.name}
-                                                />
-                                                <AvatarFallback>{relatedActor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                                            </Avatar>
-                                            <span className="text-sm">{relatedActor.name}</span>
-                                            <Badge variant="secondary" className="ml-auto text-xs">
-                                                <Star className="w-2 h-2 mr-1" />
-                                                {relatedActor.popularity.toFixed(1)}
-                                            </Badge>
-                                        </Link>
+                                        <li key={relatedActor.id} className="">
+                                            <Link href={`/actor/${relatedActor.id}`} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                < Avatar className="w-8 h-8" >
+                                                    <AvatarImage
+                                                        src={`https://image.tmdb.org/t/p/w200${relatedActor.profile_path}`}
+                                                        alt={relatedActor.name}
+                                                    />
+                                                    <AvatarFallback>{relatedActor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                                </Avatar>
+                                                <span className="text-sm">{relatedActor.name}</span>
+                                                <Badge variant="secondary" className="ml-auto text-xs">
+                                                    <Star className="w-2 h-2 mr-1" />
+                                                    {relatedActor.popularity.toFixed(1)}
+                                                </Badge>
+                                            </Link>
+                                        </li>
                                     ))}
                                 </ul>
                             </ScrollArea>
                         </div>
                     </div>
-                </AccordionContent>
+                </AccordionContent >
             </AccordionItem >
         </Accordion >
     )

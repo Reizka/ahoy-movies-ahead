@@ -1,9 +1,11 @@
 import { Star, Calendar, Clock } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from 'next/image'
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from 'next/link'
+import PaginatedList from './PaginatedList'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500'
 
@@ -69,7 +71,9 @@ export default function MovieDetails({ movie, cast, similarMovies, isLoading, er
             </CardHeader>
             <CardContent className="grid gap-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <img
+                    <Image
+                        width={50}
+                        height={50}
                         src={`${IMAGE_BASE_URL}${movie.poster_path}`}
                         alt={`${movie.title} poster`}
                         className="w-full rounded-lg shadow-lg md:col-span-1"
@@ -95,22 +99,26 @@ export default function MovieDetails({ movie, cast, similarMovies, isLoading, er
                 </div>
 
                 <h3 className="text-xl font-semibold mb-2">Cast</h3>
-                <div className="grid grid-cols-1  w-full md:grid-cols-2 gap-4">
-                    {cast.map((actor) => (
-                        <div key={actor.id} className="flex w-full items-center space-x-2">
-                            <Link className="flex-none" href={`/actor/${actor.id}`} >
-                                <Avatar className='w-20 h-20'>
-                                    <AvatarImage src={actor.profile_path ? `${IMAGE_BASE_URL}${actor.profile_path}` : undefined} />
-                                    <AvatarFallback>{actor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                                </Avatar>
-                            </Link>
-                            <div>
-                                <p className="font-medium">{actor.name}</p>
-                                <p className="text-sm text-muted-foreground">{actor.character}</p>
-                            </div>
+                <PaginatedList items={cast}>
+                    {(items) => (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[300px]">
+                            {items.map(actor => (
+                                <div key={actor.id} className="flex w-full items-center space-x-2">
+                                    <Link className="flex-none" href={`/actor/${actor.id}`}>
+                                        <Avatar className='w-20 h-20'>
+                                            <AvatarImage src={actor.profile_path ? `${IMAGE_BASE_URL}${actor.profile_path}` : undefined} />
+                                            <AvatarFallback>{actor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                        </Avatar>
+                                    </Link>
+                                    <div>
+                                        <p className="font-medium">{actor.name}</p>
+                                        <p className="text-sm text-muted-foreground">{actor.character}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    )}
+                </PaginatedList>
             </CardContent>
             <CardFooter>
                 <div className="w-full">

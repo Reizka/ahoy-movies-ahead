@@ -2,24 +2,6 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import { useEffect, useState } from "react";
 
 
-const rangeArr = (startIndex: number, endIndex: number, itemsPerPage=5): number[] => {
-    const length = endIndex - startIndex + 1;
-    if (length < itemsPerPage) {
-        // If range is too small, pad with additional numbers after endIndex
-        return Array.from({ length: itemsPerPage }, (_, index) => {
-            if (index < length) {
-                return startIndex + index - 1;
-            }
-            return endIndex + (index - length + 1);
-        });
-    }
-    if (length > itemsPerPage) {
-        // If range is too large, truncate to 5 items
-        return Array.from({ length: itemsPerPage }, (_, index) => startIndex + index - 1);
-    }
-    // If length is exactly 5, use original logic
-    return Array.from({ length }, (_, index) => startIndex + index - 1);
-};
 
 const PaginatedList = ({ items, children }) => {
 
@@ -28,16 +10,22 @@ const PaginatedList = ({ items, children }) => {
     const totalPages = Math.ceil(items.length / itemsPerPage);
     const maxNumPages = Math.min(5, totalPages);
 
+    const rangeArr = (startIndex: number, endIndex: number, itemsPerPage = 5): number[] => {
+        const length = endIndex - startIndex + 1;
+        const validNumbers = Array.from({ length }, (_, index) => {
+            const pageNum = startIndex + index;
+            return pageNum <= totalPages ? pageNum : null;
+        }).filter((num): num is number => num !== null);
+
+        return validNumbers.slice(0, itemsPerPage);
+    };
     const currentItems = items.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    const startPage = Math.max(2, currentPage - Math.floor(maxNumPages / 2));
-    const endPage = Math.min(totalPages, startPage + maxNumPages - 1);
-    const curRange = rangeArr(startPage, endPage);
 
     useEffect(() => {
         // Initialize the page from URL on component mount
         const params = new URLSearchParams(window.location.search)
-        
+
         const page = parseInt(params.get('page') || '1', 10)
         setCurrentPage(page)
 
@@ -48,7 +36,7 @@ const PaginatedList = ({ items, children }) => {
             }
         }
 
-    
+
 
         window.addEventListener('popstate', handlePopState)
 
@@ -70,36 +58,53 @@ const PaginatedList = ({ items, children }) => {
         setCurrentPage(page);
     };
 
+    let startPage = Math.max(
+        1,
+        Math.min(
+            currentPage - Math.floor(maxNumPages / 2),
+            totalPages - maxNumPages + 1
+        )
+    );
+    let endPage = Math.min(totalPages, startPage + maxNumPages - 1);
+
+    if (endPage === totalPages) {
+        startPage = startPage - 1
+        endPage = endPage - 1
+    }
+
+    let curRange = rangeArr(startPage, endPage);
+
     return (
-        <>
+        <div>
             {children(currentItems)}
             {totalPages > 1 && (
                 <Pagination>
                     <PaginationContent className="flex items-center">
-                    <PaginationItem>
-                        <PaginationPrevious onClick={() => updatePage(currentPage - 1)} />
-                    </PaginationItem>
-                    {curRange.map((page) => (
-                        <PaginationItem key={page} onClick={() => 
-                        updatePage(page)}>
-                            <PaginationLink isActive={currentPage === page}>{page}</PaginationLink>
+                        <PaginationItem>
+                            <PaginationPrevious onClick={() => updatePage(currentPage - 1)} />
                         </PaginationItem>
-                    ))}
-                    <PaginationEllipsis className="mt-auto"></PaginationEllipsis>
-                    <PaginationItem onClick={() => handlePageClick(totalPages)}
-                    >
-                        <PaginationLink >
-                            {totalPages}
-                        </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <PaginationNext onClick={() => updatePage(currentPage + 1)} />
-                    </PaginationItem>
-                </PaginationContent>
+                        {curRange.map((page) => (
+                            <PaginationItem key={page} onClick={() => updatePage(page)}>
+                                <PaginationLink isActive={currentPage === page}>{page}</PaginationLink>
+                            </PaginationItem>
+                        ))}
+                        {totalPages > maxNumPages && (
+                            <>
+                                <PaginationEllipsis className="mt-auto" />
+                                <PaginationItem onClick={() => updatePage(totalPages)}>
+                                    <PaginationLink isActive={currentPage === totalPages}>
+                                        {totalPages}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            </>
+                        )}
+                        <PaginationItem>
+                            <PaginationNext onClick={() => updatePage(currentPage + 1)} />
+                        </PaginationItem>
+                    </PaginationContent>
                 </Pagination>
             )}
-        </>
-    )
+        </div>)
 }
 
 export default PaginatedList

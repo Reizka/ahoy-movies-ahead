@@ -3,8 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import Masonry from "./myComponents/Masonry";
 import WelcomeDialog from "./myComponents/WelcomeDialog";
 import { Input } from "@/components/ui/input";
-import { useDebounce } from "@/lib/utils";
-import { fetchPopularPeople } from "./fetchData";
+import { useDebounce } from "@/lib/client_utils";
 
 
 const makeSet = (prevPeople, data) => {
@@ -34,7 +33,24 @@ async function searchPeople(query?: string, page: number = 1) {
   return response.json();
 }
 
+export async function fetchPop(page: number = 1) {
+  const response = await fetch(
+    `/api/pop-actors?${new URLSearchParams({
+      page: page.toString()
+    })}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 
+  if (!response.ok) {
+    throw new Error('Failed to fetch popular actors');
+  }
+
+  return response.json();
+}
 export default function PeoplePage({ people: initialPeople }: { people: any[] }) {
   const [people, setPeople] = useState(initialPeople);
   const [page, setPage] = useState(1);
@@ -56,7 +72,7 @@ export default function PeoplePage({ people: initialPeople }: { people: any[] })
   useEffect(() => {
     const loadPeople = async () => {
       setLoading(true);
-      const data = searchQuery !== '' ? await searchPeople(searchQuery, page) : { results: initialPeople };
+      const data = searchQuery !== '' ? await searchPeople(searchQuery, page) : await fetchPop(page);
       console.log('data', data)
 
       if (data?.results) {  // Add null check

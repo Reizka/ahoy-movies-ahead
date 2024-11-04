@@ -1,3 +1,4 @@
+"use client"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import { useEffect, useState } from "react";
 
@@ -106,5 +107,6 @@ const PaginatedList = ({ items, children }) => {
             )}
         </div>)
 }
+
 
 export default PaginatedList

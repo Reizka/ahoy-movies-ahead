@@ -114,7 +114,11 @@ export default function Component({
                                 <Film className="w-4 h-4 mr-2" />
                                 Known For
                             </h4>
-                            <ul className="space-y-2">
+
+
+
+                            <ul
+                                className="space-y-2">
                                 {actor.known_for.map(movie => (
                                     <li key={movie.id} className="flex justify-between text-sm">
                                         <span>{movie.title}</span>

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @media (prefers-color-scheme: dark) {
+ @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -19,7 +19,7 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-} */
+} 
 
 .max-w {
   max-width: 85ch;
@@ -131,12 +131,4 @@ body {
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
 
-  body {
-    @apply bg-background text-foreground;
-  }
-}

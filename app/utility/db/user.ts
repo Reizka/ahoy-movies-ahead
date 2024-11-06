@@ -2,7 +2,7 @@ import 'dotenv/config'; // Load environment variables (ensure it's only in serve
 import { createPool } from "@vercel/postgres";
 
 const pool = createPool({
-  connectionString: 'postgres://default:Vazfkb1Jtl3n@ep-round-meadow-a2x4gm56-pooler.eu-central-1.aws.neon.tech/verceldb?sslmode=require',
+  connectionString: process.env.NEXT_PUBLIC_POSTGRES_URL,
 });
 
 // Create a new user

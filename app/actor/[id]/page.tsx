@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import ExpandableParagraph from '@/app/myComponents/TruncatedParagraph';
+import ExpandableParagraph from '@/components/TruncatedParagraph';
 import {
     Accordion,
 } from "@/components/ui/accordion"
 
-import PaginatedList from '@/app/myComponents/PaginatedList';
+import PaginatedList from '@/components/PaginatedList';
 import {
     Avatar,
     AvatarFallback,
@@ -14,8 +14,8 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CalendarDays, ChevronLeft, Film, Star, TrendingUp } from "lucide-react"
-import MovieOverview from '@/app/myComponents/MovieOverviewAccordionItem';
-import { fetchActorDetails, fetchMovieCredits } from '@/app/fetchData';
+import MovieOverview from '@/components/MovieOverviewAccordionItem';
+import { fetchActorDetails, fetchMovieCredits } from '@/app/api/fetchData';
 import ActorSkeleton from './ActorSkeleton';
 import Link from 'next/link';
 import ActorPage from './ActorPage';

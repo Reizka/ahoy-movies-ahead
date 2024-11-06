@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState, useRef } from "react";
-import Masonry from "./myComponents/Masonry";
-import WelcomeDialog from "./myComponents/WelcomeDialog";
+import Masonry from "../components/Masonry";
+import WelcomeDialog from "../components/WelcomeDialog";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/lib/client_utils";
 

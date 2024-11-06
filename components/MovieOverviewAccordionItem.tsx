@@ -3,8 +3,8 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
-import ExpandableParagraph from "./TruncatedParagraph";
-import { fetchMovieCast } from "../fetchData";
+import ExpandableParagraph from "@/components/TruncatedParagraph";
+import { fetchMovieCast } from "../app/api/fetchData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Star } from "lucide-react";

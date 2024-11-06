@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect } from "react";
 import ActorPreview from "./ActorPreview";
-import { fetchRelatedActors } from "@/app/fetchData";
+import { fetchRelatedActors } from "@/app/api/fetchData";
 
 
 

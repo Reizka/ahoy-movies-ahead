@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Skeleton } from '@/components/ui/skeleton'
-import { fetchMovieCast, fetchMovieDetails } from '@/app/fetchData'
-import MovieDetails from '@/app/myComponents/MovieDetails'
+import { fetchMovieCast, fetchMovieDetails } from '@/app/api/fetchData'
+import MovieDetails from '@/components/MovieDetails'
 
 
 interface Movie {

@@ -1,13 +1,13 @@
 "use client";
 
-// components/SignupForm.tsx
 import { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../utility/firebase'; // Import the Firebase auth instance
-//import Postgres user CRUD
-import { addNewUser } from '../utility/db/user';
-
-
+import { addNewUser } from '../utility/db/user'; // Import Postgres user CRUD
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 const SignupForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,6 +16,7 @@ const SignupForm: React.FC = () => {
   const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,8 +31,7 @@ const SignupForm: React.FC = () => {
     }
 
     try {
-
-      //db request - check if db works before creating account on FB
+      // DB request - check if DB works before creating account on Firebase
       console.log(username + " " + email);
       const success = await addNewUser(username, email);
       if (success) {
@@ -45,72 +45,83 @@ const SignupForm: React.FC = () => {
 
         setSuccessMessage('Signup successful! User created.');
 
+        // Redirect to the index page after successful signup
+
       }
     } catch (error: any) {
       setErrorMessage(error.message);
     }
-
-
   };
 
   return (
-    <div>
-      <h1>Signup</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
+    <Card className="max-w-md mx-auto mt-10 p-6 shadow-md">
+      <CardHeader>
+        <h4 className="text-center mb-4">Sign Up</h4>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
 
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+          <div className="flex flex-col">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              type="text"
 
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <div>
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
+          <div className="flex flex-col">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        <button type="submit">Sign Up</button>
-      </form>
+          <div className="flex flex-col">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
 
-      {/* Display Error Message */}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          <Button type="submit" className="w-full">
+            Sign Up
+          </Button>
+        </form>
 
-      {/* Display Success Message */}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-    </div>
+        {/* Display Error Message */}
+        {errorMessage && (
+          <p className="text-red-600 text-center mt-4">{errorMessage}</p>
+        )}
+
+        {/* Display Success Message */}
+        {successMessage && (
+          <p className="text-green-600 text-center mt-4">{successMessage}</p>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
 export default SignupForm;
+

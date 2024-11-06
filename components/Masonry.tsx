@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { use, useEffect, useRef, useState } from "react"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { fetchRelatedActors } from "../fetchData"
+import { fetchRelatedActors } from "../app/api/fetchData"
 import autoAnimate from '@formkit/auto-animate'
 
 

@@ -4,7 +4,7 @@ import "./globals.css";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import NavBar from "./myComponents/NavBar";
+import NavBar from "../components/NavBar";
 
 
 export const metadata: Metadata = {

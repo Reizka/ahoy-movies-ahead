@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from 'next/link'
-import PaginatedList from './PaginatedList'
+import PaginatedList from '@/components/PaginatedList'
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500'
 

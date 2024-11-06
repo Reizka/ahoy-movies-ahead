@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { fetchPopularPeople } from '@/app/fetchData';
+import { fetchPopularPeople } from '@/app/api/fetchData';
 
 export async function GET(request: NextRequest) {
     try {

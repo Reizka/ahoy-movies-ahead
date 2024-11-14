@@ -1,4 +1,3 @@
-
 const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTQ1ZmNlYTYyMzIwMDQyNjA0YTcyYzFjNzE3MzQxZiIsIm5iZiI6MTczMDEyMDA2NS4wNzIwNDEsInN1YiI6IjY3MWY4OGUxNzY5MTA3ZDc3YjQ4NGE1MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.WilCT_YVeTsbcbtJM2UjuFPz5JKE2CycjwokAfTY-IY'
 
 export const fetchMovieCredits = async (personId) => {
@@ -141,4 +140,42 @@ export const fetchPopularPeople = (page = 1) => {
     return fetch(url, options)
         .then(res => res.json())
         .catch(err => console.error(err));
+};
+
+export const searchMovies = (query: string, page: number = 1) => {
+    if (!query) return Promise.resolve({ results: [] });
+
+    const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=${page}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${TMDB_TOKEN}`
+        }
+    };
+
+    return fetch(url, options)
+        .then(res => res.json())
+        .catch(err => {
+            console.error('Error searching movies:', err);
+            return { results: [] };
+        });
+};
+
+export const fetchPopularMovies = (page = 1) => {
+    const url = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${TMDB_TOKEN}`
+        }
+    };
+
+    return fetch(url, options)
+        .then(res => res.json())
+        .catch(err => {
+            console.error('Error fetching popular movies:', err);
+            return { results: [] };
+        });
 };

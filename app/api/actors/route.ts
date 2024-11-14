@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { searchMovies } from '../../fetchData';
+import { searchPeople } from '../../fetchData';
 
 export async function GET(request: NextRequest) {
     try {
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         console.log('page', page)
 
         // Fetch data from external API
-        const data = await searchMovies(query || '', Number(page))
+        const data = await searchPeople(query, page)
 
         console.log('data', data)
 

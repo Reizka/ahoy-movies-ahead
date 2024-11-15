@@ -25,11 +25,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex flex-col h-svh">
         <NavBar />
-        <div className="max-w m-auto p-3 flex-1 flex flex-col w-full ">
+        <div id="scroller" className="overflow-y-auto max-w m-auto p-3 flex-1 flex flex-col w-full ">
 
           {children}
         </div>
       </body>
-    </html>
+    </html >
   );
 }

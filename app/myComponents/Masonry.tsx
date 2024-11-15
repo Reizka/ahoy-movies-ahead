@@ -47,7 +47,6 @@ export default function Component({
     ], loading = false, isMovies = false, movies = [], containerRef,
 
 }: ActorMasonryProps) {
-    console.log('loading', loading)
     const parent0 = useRef(null)
     const parent1 = useRef(null)
     const parent2 = useRef(null)

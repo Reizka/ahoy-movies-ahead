@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Movie } from './types';  // Add this import
 import { Switch } from "@/components/ui/switch"
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { animate } from "framer-motion";
 
 interface Person {
   id: number;
@@ -104,16 +105,16 @@ export async function fetchPopMovies(page: number = 1) {
   return response.json();
 }
 
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+// function useDebounce<T>(value: T, delay: number): T {
+//   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(timer);
-  }, [value, delay]);
+//   useEffect(() => {
+//     const timer = setTimeout(() => setDebouncedValue(value), delay);
+//     return () => clearTimeout(timer);
+//   }, [value, delay]);
 
-  return debouncedValue;
-}
+//   return debouncedValue;
+// }
 
 export default function PeoplePage({ people: initialPeople, movies: initialMovies }: { people: Person[], movies: Movie[] }) {
   const [people, setPeople] = useState<Person[]>(initialPeople);
@@ -126,13 +127,12 @@ export default function PeoplePage({ people: initialPeople, movies: initialMovie
   const [movies, setMovies] = useState<Movie[]>(initialMovies);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const debouncedSearch = useDebounce(searchQuery, 200);
+  // const debouncedSearch = useDebounce(searchQuery, 200);
 
-  const masonryRef = useRef<HTMLDivElement>(null);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const isFirstLoad = useRef(true);
+  // const isFirstLoad = useRef(true);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -140,18 +140,39 @@ export default function PeoplePage({ people: initialPeople, movies: initialMovie
     const value = e.target.value;
     setSearchQuery(value);
 
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    if (value === '') {
-      setPeople(initialPeople)
-      setMovies(initialMovies)
-      return
+    // Clear any pending timeouts
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
-    // containerRef.current.scrollTop = 0
+
+    // Reset page number when searching
+    pageRef.current = 1;
+
+    if (value === '') {
+      setPeople(initialPeople);
+      setMovies(initialMovies);
+      return;
+    }
+
     timeoutRef.current = setTimeout(async () => {
-      await loadData(value, 1)
+      setLoading(true); // Set loading before the search
+      try {
+        await loadData(value, 1);
+      } finally {
+        setLoading(false);
+      }
     }, 300);
 
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    const container = document.querySelector("#scroller");
+    if (container) {
+      animate(container.scrollTop, 0, {
+        duration: 0.3,
+        onUpdate: (value) => {
+          container.scrollTop = value;
+        },
+        ease: "easeOut"
+      });
+    }
   };
 
 
@@ -191,13 +212,11 @@ export default function PeoplePage({ people: initialPeople, movies: initialMovie
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (isFirstLoad.current) {
-          isFirstLoad.current = false;
-          return;
-        }
-        if (entries[0].isIntersecting && !loading && (movies.length > 0 || people.length > 0)) {
-          console.log('entries[0].isIntersecting', entries[0].isIntersecting)
-          pageRef.current = pageRef.current + 1;
+        if (entries[0].isIntersecting &&
+          !loading &&
+          ((isMovies && movies.length > 0) || (!isMovies && people.length > 0)) &&
+          searchQuery.length > 0) {
+          pageRef.current += 1;
           loadData(searchQuery, pageRef.current);
         }
       },
@@ -205,7 +224,6 @@ export default function PeoplePage({ people: initialPeople, movies: initialMovie
     );
 
     const currentRef = sentinelRef.current;
-
     if (currentRef) {
       observer.observe(currentRef);
     }
@@ -224,46 +242,46 @@ export default function PeoplePage({ people: initialPeople, movies: initialMovie
 
   return (
     <>
-      <ScrollArea ref={masonryRef}
-        className="container mx-auto px-4 py-4 relative">
-        <div className="sticky z-10 top-0 flex-1">
-          <div className="relative py-3">
-            <div className="px-2">
-              <div className="bg-white flex items-center rounded-lg border-2 shadow-md">
-                <Input
-                  id="largeInput"
-                  type="search"
-                  value={searchQuery}
-                  placeholder={isMovies ? "Search movies..." : "Search actors..."}
-                  onChange={handleSearch}
-                  className="text-lg py-6 px-4 flex-1 border-0 shadow-none"
+      {/* <ScrollArea ref={masonryRef}
+        className="container mx-auto px-4 py-4 relative"> */}
+      <div className="sticky z-10 top-0 flex-1">
+        <div className="relative py-3">
+          <div className="px-2">
+            <div className="bg-white flex items-center rounded-lg border-2 shadow-md focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+              <Input
+                id="largeInput"
+                type="search"
+                value={searchQuery}
+                placeholder={isMovies ? "Search movies..." : "Search actors..."}
+                onChange={handleSearch}
+                className="text-lg py-6 px-4 flex-1 border-0 shadow-none focus:ring-0 focus-visible:ring-0 focus:outline-none"
+              />
+              <div className="flex items-center gap-2 pr-4 ml-1">
+                <span className="text-sm text-gray-500">Actors</span>
+                <Switch
+                  checked={isMovies}
+                  onCheckedChange={() => {
+                    setIsMovies(!isMovies);
+                    loadData(searchQuery, 1)
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
                 />
-                <div className="flex items-center gap-2 pr-4 ml-1 ">
-                  <span className="text-sm text-gray-500">Actors</span>
-                  <Switch
-                    checked={isMovies}
-                    onCheckedChange={() => {
-                      setIsMovies(!isMovies);
-                      loadData(searchQuery, 1)
-                      window.scrollTo({ top: 0, behavior: 'smooth' })
-                    }}
-                  />
-                  <span className="text-sm text-gray-500">Movies</span>
-                </div>
+                <span className="text-sm text-gray-500">Movies</span>
               </div>
             </div>
           </div>
         </div>
-        <Masonry
-          actors={people}
-          loading={loading}
-          isMovies={isMovies}
-          movies={movies}
-          containerRef={containerRef}
-        />
-        <WelcomeDialog open={dialogOpen} onOpenChange={() => setDialogOpen(!dialogOpen)} />
-        <div className="h-20" ref={sentinelRef}></div>
-      </ScrollArea>
+      </div>
+      <Masonry
+        actors={people}
+        loading={loading}
+        isMovies={isMovies}
+        movies={movies}
+        containerRef={containerRef}
+      />
+      <WelcomeDialog open={dialogOpen} onOpenChange={() => setDialogOpen(!dialogOpen)} />
+      <div className="h-20" ref={sentinelRef}></div>
+      {/* </ScrollArea> */}
     </>
   );
 }

@@ -122,7 +122,7 @@ function ActorCard({ actor }: { actor: Actor }) {
     }, [])
 
     return (
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden rounded-lg">
             <CardContent className="p-0">
                 <Link href={`/actor/${actor.id}`}>
                     <div className="relative">
@@ -190,13 +190,14 @@ function ActorCard({ actor }: { actor: Actor }) {
 function MovieCard({ movie }: { movie: Movie }) {
     const [showCast, setShowCast] = useState<boolean>(true);
     const parent = useRef(null)
+    console.log('movie', movie)
 
     useEffect(() => {
         parent.current && autoAnimate(parent.current)
     }, [])
 
     return (
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden rounded-lg">
             <CardContent className="p-0">
                 <Link href={`/film/${movie.id}`}>
                     <div className="relative">
@@ -220,21 +221,24 @@ function MovieCard({ movie }: { movie: Movie }) {
                             {movie.vote_average.toFixed(1)}
                         </Badge>
                     </div>
-                    <ul className="space-y-1" ref={parent}>
+                    <div className="space-y-2" ref={parent}>
                         {movie.cast?.slice(0, 5).map((actor) => (
-                            <li key={actor.id} className="flex items-center space-x-1 text-sm text-muted-foreground">
-                                <Avatar className="w-6 h-6">
+                            <div key={actor.id} className="flex items-center gap-2">
+                                <Avatar className="w-8 h-8">
                                     <AvatarImage
-                                        src={`https://image.tmdb.org/t/p/w200${actor.profilePath}`}
-                                        alt={actor.name} />
+                                        src={`https://image.tmdb.org/t/p/w92${actor.profile_path}`}
+                                        alt={actor.name}
+                                    />
                                     <AvatarFallback>{actor.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <Link href={`/actor/${actor.id}`}>
+                                <Link
+                                    className="text-sm text-muted-foreground"
+                                    href={`/actor/${actor.id}`}>
                                     {actor.name}
                                 </Link>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             </CardContent>
         </Card>

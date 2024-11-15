@@ -142,7 +142,7 @@ export const fetchPopularPeople = (page = 1) => {
         .catch(err => console.error(err));
 };
 
-export const searchMovies = (query: string, page: number = 1) => {
+export const searchMovies = async (query: string, page: number = 1) => {
     if (!query) return Promise.resolve({ results: [] });
 
     const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=${page}`;
@@ -154,15 +154,29 @@ export const searchMovies = (query: string, page: number = 1) => {
         }
     };
 
-    return fetch(url, options)
-        .then(res => res.json())
-        .catch(err => {
-            console.error('Error searching movies:', err);
-            return { results: [] };
-        });
+    try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        
+        // Fetch cast for each movie
+        const moviesWithCast = await Promise.all(
+            data.results.map(async (movie: any) => {
+                const cast = await fetchMovieCast(movie.id);
+                return {
+                    ...movie,
+                    cast: cast?.slice(0, 5) || [] // Top 5 cast members
+                };
+            })
+        );
+
+        return { ...data, results: moviesWithCast };
+    } catch (err) {
+        console.error('Error searching movies:', err);
+        return { results: [] };
+    }
 };
 
-export const fetchPopularMovies = (page = 1) => {
+export const fetchPopularMovies = async (page = 1) => {
     const url = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`;
     const options = {
         method: 'GET',
@@ -172,10 +186,24 @@ export const fetchPopularMovies = (page = 1) => {
         }
     };
 
-    return fetch(url, options)
-        .then(res => res.json())
-        .catch(err => {
-            console.error('Error fetching popular movies:', err);
-            return { results: [] };
-        });
+    try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+
+        // Fetch cast for each movie
+        const moviesWithCast = await Promise.all(
+            data.results.map(async (movie: any) => {
+                const cast = await fetchMovieCast(movie.id);
+                return {
+                    ...movie,
+                    cast: cast?.slice(0, 5) || [] // Top 5 cast members
+                };
+            })
+        );
+
+        return { ...data, results: moviesWithCast };
+    } catch (err) {
+        console.error('Error fetching popular movies:', err);
+        return { results: [] };
+    }
 };

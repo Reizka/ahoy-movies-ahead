@@ -145,8 +145,9 @@ export default function PeoplePage({ people: initialPeople, movies: initialMovie
       clearTimeout(timeoutRef.current);
     }
 
-    // Reset page number when searching
+    // Reset page number and loading state
     pageRef.current = 1;
+    setLoading(false);
 
     if (value === '') {
       setPeople(initialPeople);
@@ -155,11 +156,13 @@ export default function PeoplePage({ people: initialPeople, movies: initialMovie
     }
 
     timeoutRef.current = setTimeout(async () => {
-      setLoading(true); // Set loading before the search
-      try {
-        await loadData(value, 1);
-      } finally {
-        setLoading(false);
+      if (!loading) {  // Additional check
+        setLoading(true);
+        try {
+          await loadData(value, 1);
+        } finally {
+          setLoading(false);
+        }
       }
     }, 300);
 
@@ -212,10 +215,12 @@ export default function PeoplePage({ people: initialPeople, movies: initialMovie
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        // More strict conditions to prevent infinite loading
         if (entries[0].isIntersecting &&
           !loading &&
-          ((isMovies && movies.length > 0) || (!isMovies && people.length > 0)) &&
-          searchQuery.length > 0) {
+          ((isMovies && movies.length >= 20) || (!isMovies && people.length >= 20)) && // Only load more if we have a full page
+          searchQuery.length > 0 &&
+          pageRef.current < 1000) { // Add maximum page limit
           pageRef.current += 1;
           loadData(searchQuery, pageRef.current);
         }

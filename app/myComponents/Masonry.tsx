@@ -19,6 +19,7 @@ interface ActorMasonryProps {
     loading: boolean
     isMovies: boolean
     movies: Movie[]
+    containerRef: React.RefObject<HTMLDivElement>
 }
 
 const ActorSkeleton = () => (
@@ -43,7 +44,8 @@ export default function Component({
         { id: 7, name: "Robert De Niro", profilePath: "/placeholder.svg?height=450&width=300", popularity: 72.56, knownFor: ["Goodfellas", "Taxi Driver", "Raging Bull"] },
         { id: 8, name: "Scarlett Johansson", profilePath: "/placeholder.svg?height=450&width=300", popularity: 85.67, knownFor: ["Lost in Translation", "Marriage Story", "Black Widow"] },
         { id: 9, name: "Morgan Freeman", profilePath: "/placeholder.svg?height=450&width=300", popularity: 69.23, knownFor: ["The Shawshank Redemption", "Driving Miss Daisy", "Million Dollar Baby"] },
-    ], loading = false, isMovies = false, movies = []
+    ], loading = false, isMovies = false, movies = [], containerRef,
+
 }: ActorMasonryProps) {
     console.log('loading', loading)
     const parent0 = useRef(null)
@@ -62,35 +64,36 @@ export default function Component({
         parent3.current && autoAnimate(parent3.current)
     }, [parent0, parent1, parent2, parent3])
 
+
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="space-y-4" ref={parent0}>
-                {data.filter((_, index:number) => index % 4 === 0).map((item) => (
-                    isMovies ? 
+                {data.filter((_, index: number) => index % 4 === 0).map((item) => (
+                    isMovies ?
                         <MovieCard key={item.id} movie={item as Movie} /> :
                         <ActorCard key={item.id} actor={item as Actor} />
                 ))}
                 {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
             </div>
             <div className="space-y-4 md:mt-12" ref={parent1}>
-                {data.filter((_:any, index:number) => index % 4 === 1).map((item: Actor | Movie) => (
-                    isMovies ? 
+                {data.filter((_: any, index: number) => index % 4 === 1).map((item: Actor | Movie) => (
+                    isMovies ?
                         <MovieCard key={item.id} movie={item as Movie} /> :
                         <ActorCard key={item.id} actor={item as Actor} />
                 ))}
                 {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
             </div>
             <div className="space-y-4" ref={parent2}>
-                {data.filter((_:any, index:number) => index % 4 === 2).map((item: Actor | Movie) => (
-                    isMovies ? 
+                {data.filter((_: any, index: number) => index % 4 === 2).map((item: Actor | Movie) => (
+                    isMovies ?
                         <MovieCard key={item.id} movie={item as Movie} /> :
                         <ActorCard key={item.id} actor={item as Actor} />
                 ))}
                 {loading && [...Array(2)].map((_, index) => (<ActorSkeleton key={index} />))}
             </div>
             <div className="space-y-4 mt-12" ref={parent3}>
-                {data.filter((_:any, index:number) => index % 4 === 3).map((item: Actor | Movie) => (
-                    isMovies ? 
+                {data.filter((_: any, index: number) => index % 4 === 3).map((item: Actor | Movie) => (
+                    isMovies ?
                         <MovieCard key={item.id} movie={item as Movie} /> :
                         <ActorCard key={item.id} actor={item as Actor} />
                 ))}

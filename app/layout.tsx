@@ -25,10 +25,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex flex-col h-svh">
         <NavBar />
-        <ScrollArea className="max-w m-auto p-3 flex-1 flex flex-col w-full">
+        <div className="max-w m-auto p-3 flex-1 flex flex-col w-full ">
 
           {children}
-        </ScrollArea>
+        </div>
       </body>
     </html>
   );

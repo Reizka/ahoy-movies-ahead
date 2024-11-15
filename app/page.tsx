@@ -1,9 +1,11 @@
 import PeoplePage from "./PeoplePage";
-import { fetchPopularPeople } from "./fetchData";
+import { fetchPopularPeople, fetchPopularMovies } from "./fetchData";
 
 const Page = async () => {
   const popularPeople = await fetchPopularPeople(1)
-  return <PeoplePage people={popularPeople.results}></PeoplePage>
+  const popularMovies = await fetchPopularMovies(1)
+  console.log('fetchPopPeople', popularPeople);
+  return <PeoplePage people={popularPeople.results} movies={popularMovies.results}></PeoplePage>
 
 }
 
